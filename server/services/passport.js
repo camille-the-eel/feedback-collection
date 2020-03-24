@@ -1,7 +1,12 @@
 //IMPORTS
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const mongoose = require('mongoose');
 const keys = require('../config/keys');
+
+// access the user model class here:
+//one argument means we are trying to "fetch" from mongoose, two means we are trying to "load" into it
+const User = mongoose.model('users');
 
 //OAUTH CONFIG
 passport.use(
@@ -14,9 +19,9 @@ passport.use(
       callbackURL: '/auth/google/callback'
     },
     (accessToken, refreshToken, profile, done) => {
-      console.log('ACCESS', accessToken);
-      console.log('REFRESH', refreshToken);
-      console.log('PROFILE: ', profile);
+      // now we are using the Model Class (table schema) to create a new Model Instance (row)  >  new User({ googleID: profile.id, otherKey: otherValue })
+      // but!! this does not automatically save (persists) to the database >> must call .save() method
+      new User({ googleID: profile.id }).save();
     }
   )
 );
