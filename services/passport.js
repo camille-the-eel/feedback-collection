@@ -1,6 +1,7 @@
 //IMPORTS
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const mongoose = require('mongoose');
 const keys = require('../config/keys');
 
@@ -21,7 +22,7 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-//OAUTH CONFIG
+//OAUTH GOOGLE CONFIG
 passport.use(
   new GoogleStrategy(
     {
@@ -45,6 +46,28 @@ passport.use(
           new User({ googleID: profile.id })
             .save() //bc save is async we must use a promise before telling passport we're done
             .then(user => done(null, user)); //this 'user' is the second instance of this User record, we always use the promise return instance (in case other things happen to it on the db side)
+        }
+      });
+    }
+  )
+);
+
+//OAUTH FACEBOOK CONFIG
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: keys.facebookClientID,
+      clientSecret: keys.facebookClientSecret,
+      callbackURL: '/auth/facebook/callback'
+    },
+    (accessToken, refreshToken, profile, done) => {
+      User.findOne({ facebookID: profile.id }).then(existingUser => {
+        if (existingUser) {
+          done(null, existingUser);
+        } else {
+          new User({ facebookID: profile.id })
+            .save()
+            .then(user => done(null, user));
         }
       });
     }
