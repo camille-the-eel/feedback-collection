@@ -6,7 +6,7 @@ const passport = require('passport'); //required here so we can tell passport to
 const keys = require('./config/keys');
 //does not need to be assigned to a variable since there is nothing being exported-no info being passed
 //but! must be called to be executed
-require('./models/User'); //must call models before they are ever used in another file. create first, update next
+require('./models/User'); //must call models before they are ever used in another file. create first, update next //i.e. if you require passport.js first it will run an error
 require('./services/passport');
 
 //Connecting to mongoose via our mongo atlas URI declared in our private keys file

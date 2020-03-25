@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose; //destructuring, yo
 
 const userSchema = new Schema({
-    googleID: String
+    googleID: String, 
+    facebookID: String
     //Schemas can be edited at will
 });
 
