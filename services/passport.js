@@ -6,10 +6,10 @@ const mongoose = require('mongoose');
 const keys = require('../config/keys');
 
 // access the user model class here:
-//one argument means we are trying to "fetch" from mongoose, two means we are trying to "load" into it
+//using one argument means we are trying to "fetch" from mongoose, two means we are trying to "load" into it (see Line 13 of models/User.js)
 const User = mongoose.model('users');
 
-//this first arg is what is passed from the db to passport in .use() found below: second arg of Line 33 or Line 39
+//this first arg is what is passed from the db to passport in .use() found below: second arg of Line 42 or Line 48
 passport.serializeUser((user, done) => {
   //user.id is NOT the profile.id, it is the primary key _id that mongo auto-generates upon creation of a new record
   done(null, user.id);
@@ -77,3 +77,5 @@ passport.use(
 //NO EXPORTS
 //Because we do not need to export any code, we just need this file to be read and executed as is
 //We will do this by requiring this file in our index.js -- requiring the file will execute it
+
+
