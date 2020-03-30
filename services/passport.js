@@ -30,7 +30,8 @@ passport.use(
       clientSecret: keys.googleClientSecret,
       //ROUTE THE USER IS SENT TO AFTER GOOGLE GRANTS PERMISSION
       // Google's permission code will be sent back on the end of this URL as a query string
-      callbackURL: '/auth/google/callback'
+      callbackURL: '/auth/google/callback',
+      proxy: true
     },
     (accessToken, refreshToken, profile, done) => {
       // async db query & promise
