@@ -33,20 +33,22 @@ passport.use(
       callbackURL: '/auth/google/callback',
       proxy: true
     },
-    async (accessToken, refreshToken, profile, done) => {
+    (accessToken, refreshToken, profile, done) => {
       // async db query & promise
       // existingUser represents a Model Instance of a user that matched this query
-      const existingUser = await User.findOne({ googleID: profile.id });
-
-      if (existingUser) {
-        // we already have a record with profile ID!
-        //done() tells passport we are all done with our db part >> first arg is null(indicating there is no error) second arg is the user record
-        return done(null, existingUser);
-      }
-      // since we don't have a match now we are using the Model Class (table schema) to create a new Model Document (row)....by creating a new model instance >  new User({ googleID: profile.id, otherKey: otherValue })
-      // but!! this does not automatically save (persist) to the database >> must call .save() method
-      const user = await new User({ googleID: profile.id }).save(); //bc save is async we must use a promise before telling passport we're done
-      done(null, user); //this 'user' is the second instance of this User record, we always use the promise return instance (in case other things happen to it on the db side)
+      User.findOne({ googleID: profile.id }).then(existingUser => {
+        if (existingUser) {
+          // we already have a record with profile ID!
+          //done() tells passport we are all done with our db part >> first arg is null(indicating there is no error) second arg is the user record
+          done(null, existingUser);
+        } else {
+          // since we don't have a match now we are using the Model Class (table schema) to create a new Model Document (row)....by creating a new model instance >  new User({ googleID: profile.id, otherKey: otherValue })
+          // but!! this does not automatically save (persist) to the database >> must call .save() method
+          new User({ googleID: profile.id })
+            .save() //bc save is async we must use a promise before telling passport we're done
+            .then(user => done(null, user)); //this 'user' is the second instance of this User record, we always use the promise return instance (in case other things happen to it on the db side)
+        }
+      });
     }
   )
 );
@@ -60,14 +62,16 @@ passport.use(
       callbackURL: '/auth/facebook/callback',
       proxy: true
     },
-    async (accessToken, refreshToken, profile, done) => {
-      const existingUser = await User.findOne({ facebookID: profile.id });
-
-      if (existingUser) {
-        return done(null, existingUser);
-      }
-      const user = await new User({ facebookID: profile.id }).save();
-      done(null, user);
+    (accessToken, refreshToken, profile, done) => {
+      User.findOne({ facebookID: profile.id }).then(existingUser => {
+        if (existingUser) {
+          done(null, existingUser);
+        } else {
+          new User({ facebookID: profile.id })
+            .save()
+            .then(user => done(null, user));
+        }
+      });
     }
   )
 );
@@ -75,3 +79,5 @@ passport.use(
 //NO EXPORTS
 //Because we do not need to export any code, we just need this file to be read and executed as is
 //We will do this by requiring this file in our index.js -- requiring the file will execute it
+
+
