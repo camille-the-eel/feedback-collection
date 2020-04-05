@@ -1,30 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route } from 'react-router-dom';
+// BrowserRouter: "the brain" React Component, tells react-router how to behave, looks at the current URL and then changes the set of visible components on the page at any given time
+// Route: React Component used to set up a rule between a certain route that the user might visit and a set of components that will actually be visible on the screen
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="btn-google-auth"
-          href="/auth/google"
-        >
-          Sign In With Google
-        </a>
-        <a
-          className="btn-fb-auth"
-          href="/auth/facebook"
-        >
-          Sign In With Facebook
-        </a>
-      </header>
-    </div>
-  );
-}
+// dumby components for route set up
+const Header = () => <h2>Header</h2>
+const Dashboard = () => <h2>Dashboard</h2>
+const SurveryNew = () => <h2>Survery New</h2>
+const Landing = () => <h2>Landing</h2>
+
+// BrowserRouter only takes one child (so everything needs to be wrapped in one div)
+
+const App = () => {
+    return (
+        <div>
+            <BrowserRouter>
+                <div>
+                    <Route path="/" component={Landing} />
+                </div>
+            </BrowserRouter>
+        </div>
+    );
+};
 
 export default App;
