@@ -14,10 +14,25 @@ module.exports = app => {
   );
 
   //SECOND REQ -- SENT WITH PERMISSION CODE -- RES IS USER INFO (ACCESSED IN OAUTH CONFIG services/passport.js)
-  app.get('/auth/google/callback', passport.authenticate('google'));
+  app.get(
+    '/auth/google/callback',
+    passport.authenticate('google'),
+    (req, res) => {
+      res.redirect('/surveys');
+    }
+  );
 
-  // right now the routes below are almost acting as "buttons"... you go to the route...the second arg is executed
-  // route can be made up to whatever you want it to be
+  // FACEBOOK ROUTES
+  app.get('/auth/facebook', passport.authenticate('facebook'));
+
+  app.get(
+    '/auth/facebook/callback',
+    passport.authenticate('facebook', {
+      successRedirect: '/surveys',
+      failureRedirect: '/'
+    })
+  );
+
   // req = incoming request, res = outgoing response
 
   app.get('/api/current-user', (req, res) => {
@@ -28,7 +43,7 @@ module.exports = app => {
   app.get('/api/logout', (req, res) => {
     // logout() attached automatically from passport -- kills the cookie
     req.logout();
-    res.send(req.user); //this would return as empty
+    res.redirect('/');
   });
 
   // req.session is what is stored in the cookie session -- it is the info that we are passing
@@ -36,14 +51,4 @@ module.exports = app => {
 
   // basically... cookie processed request and populates the session with the data requested to req.session
   // then passport access the data that exists on req.session
-
-  // FACEBOOK ROUTES
-  app.get(
-    '/auth/facebook',
-    passport.authenticate('facebook')
-  );
-
-  app.get('/auth/facebook/callback', passport.authenticate('facebook'));
-
 };
-
