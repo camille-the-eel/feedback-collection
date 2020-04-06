@@ -6,11 +6,11 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux'; //connect gives components the ability to call action creators
 import * as actions from './actions'; //brings in all action creators and assigns them to "actions"
 import Header from './components/Header';
+import Landing from './components/Landing';
 
 // dumby components for route set up
 const Dashboard = () => <h2>Dashboard</h2>;
 const SurveyNew = () => <h2>Survery New</h2>;
-const Landing = () => <h2>Landing</h2>;
 
 // BrowserRouter only takes one child (so everything needs to be wrapped in one div)
 
