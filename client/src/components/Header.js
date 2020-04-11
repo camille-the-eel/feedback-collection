@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import StripeWrapper from './StripeWrapper';
 
 class Header extends Component {
   renderContent() {
@@ -21,6 +22,9 @@ class Header extends Component {
       default:
         return (
           <div className="auth-true">
+            <a className="nav-item nav-link">
+              <StripeWrapper/>
+            </a>
             <a className="nav-item nav-link" href="/api/logout">
               Logout
             </a>
