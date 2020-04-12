@@ -24,7 +24,7 @@ app.use(
   cookieSession({
     //config object
     maxAge: 30 * 24 * 60 * 60 * 1000, //in milliseconds >> how long cookie can exist inside the browser before expiring
-    keys: [keys.cookieKey] //key being used to encrypt our cookie, so cookie is automatically encrypted when generated
+    keys: [keys.cookieKey], //key being used to encrypt our cookie, so cookie is automatically encrypted when generated
   })
 );
 
@@ -32,11 +32,25 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 //authRoutes.js is being run through express 'app' -- this is how you can run 'app' methods being used/exported in/from another file
 //import is a: function, that is then immediately called with 'app'
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+
+// HEROKU PROD - CLIENT
+// order of operations matters here.. app.use will run first, and check for any file that would match the req
+// if there is no matching file, it will assume it's a client route to be handled >> app.get will run
+if (process.env.NODE_ENV === 'production') {
+  // express will serve up prod assets like main.js file
+  app.use(express.static('client/build'));
+
+  // express will serve up the index.html file if it doesn't recognize the route
+  // kicks it over to our client (for example, routes being handled client side with react router like /surveys)
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 //PORT LISTENER
 const PORT = process.env.PORT || 5000;
