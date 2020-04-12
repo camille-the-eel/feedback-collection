@@ -31,6 +31,7 @@ app.use(passport.session());
 //authRoutes.js is being run through express 'app' -- this is how you can run 'app' methods being used/exported in/from another file
 //import is a: function, that is then immediately called with 'app'
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 //PORT LISTENER
 const PORT = process.env.PORT || 5000;
