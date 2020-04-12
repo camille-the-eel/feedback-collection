@@ -3,7 +3,11 @@ const { Schema } = mongoose; //destructuring, yo
 
 const userSchema = new Schema({
     googleID: String, 
-    facebookID: String
+    facebookID: String,
+    credits: {
+        type: Number, 
+        default: 0
+    }
     //Schemas can be edited at will
 });
 
