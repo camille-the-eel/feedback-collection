@@ -22,9 +22,12 @@ class Header extends Component {
       default:
         return (
           <div className="auth-true">
-            <a className="nav-item nav-link">
+            <div className="nav-item nav-link">
               <StripeWrapper/>
-            </a>
+            </div>
+            <div className="nav-item nav-link">
+              Credits: {this.props.auth.credits}
+            </div>
             <a className="nav-item nav-link" href="/api/logout">
               Logout
             </a>
