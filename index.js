@@ -1,6 +1,7 @@
 //IMPORTS
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session'); //must include to enable cookies
 const passport = require('passport'); //required here so we can tell passport to use cookies
 const keys = require('./config/keys');
@@ -16,6 +17,8 @@ mongoose.connect(keys.mongoURI);
 const app = express();
 
 // MIDDLEWARE : small functions that an be used to modify incoming requests to our app before they are sent off to route handlers
+app.use(bodyParser.json());
+
 //telling express to use cookies!
 app.use(
   cookieSession({
@@ -24,9 +27,11 @@ app.use(
     keys: [keys.cookieKey] //key being used to encrypt our cookie, so cookie is automatically encrypted when generated
   })
 );
+
 //telling pasport to use cookieeeees
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 //authRoutes.js is being run through express 'app' -- this is how you can run 'app' methods being used/exported in/from another file
 //import is a: function, that is then immediately called with 'app'
