@@ -37,6 +37,7 @@ app.use(passport.session());
 //import is a: function, that is then immediately called with 'app'
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 // HEROKU PROD - CLIENT
 // order of operations matters here.. app.use will run first, and check for any file that would match the req
