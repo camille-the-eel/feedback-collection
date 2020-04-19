@@ -21,5 +21,6 @@ module.exports = app => {
 
         // first arg: subject & recipients , second arg: content of email (body)
         const mailer = new Mailer(survey, surveyTemplate(survey));
+        mailer.send();
     });
 };

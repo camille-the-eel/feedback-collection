@@ -60,7 +60,7 @@ class Mailer extends helper.Mail {
     });
 
     // then pass in the actual req and send to API
-    const response = this.sgApi.API(request);
+    const response = await this.sgApi.API(request);
     return response;
   }
 }

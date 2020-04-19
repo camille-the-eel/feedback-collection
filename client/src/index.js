@@ -7,6 +7,10 @@ import reduxThunk from 'redux-thunk';
 import App from './App';
 import reducers from './reducers';
 
+// temporary test code for Mailer back-end route
+import axios from 'axios';
+window.axios = axios;
+
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
 // Render root component (App.js) to DOM (index.html in /public dir)
@@ -16,7 +20,3 @@ ReactDOM.render(
   </Provider>,
   document.querySelector('#root')
 );
-
-// testing our .env keys
-console.log('STRIPE KEY:', process.env.REACT_APP_STRIPE_KEY);
-console.log('ENV', process.env.NODE_ENV);
