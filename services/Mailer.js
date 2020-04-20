@@ -13,7 +13,7 @@ class Mailer extends helper.Mail {
     super();
 
     this.sgApi = sendgrid(keys.sendGridKey);
-    this.from_email = new helper.Email('no-reply@emaily.com');
+    this.from_email = new helper.Email('c.hughes64@gmail.com');
     this.subject = subject;
     this.body = new helper.Content('text/html', content);
     this.recipients = this.formatAddresses(recipients);
@@ -58,10 +58,16 @@ class Mailer extends helper.Mail {
       path: '/v3/mail/send',
       body: this.toJSON(),
     });
+    
+    try {
+       // then pass in the actual req and send to API
+      const response = await this.sgApi.API(request);
+      return response;
+    } catch (e) {
+      console.log("ERROR", e);
+    }
 
-    // then pass in the actual req and send to API
-    const response = await this.sgApi.API(request);
-    return response;
+  
   }
 }
 
