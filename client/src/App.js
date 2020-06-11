@@ -7,10 +7,8 @@ import { connect } from 'react-redux'; //connect gives components the ability to
 import * as actions from './actions'; //brings in all action creators and assigns them to "actions"
 import Header from './components/Header';
 import Landing from './components/Landing';
-
-// dumby components for route set up
-const Dashboard = () => <h2>Dashboard</h2>;
-const SurveyNew = () => <h2>Survery New</h2>;
+import Dashboard from './components/Dashboard';
+import SurveyNew from './components/surveys/SurveyNew';
 
 // BrowserRouter only takes one child (so everything needs to be wrapped in one div)
 
