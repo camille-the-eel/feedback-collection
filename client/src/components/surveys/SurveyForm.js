@@ -4,18 +4,12 @@ import { reduxForm, Field } from 'redux-form';
 import { Link } from 'react-router-dom';
 import SurveyField from './SurveyField';
 import validateEmails from '../../utils/validateEmails';
-
-const FIELDS = [
-    { label: 'Survey Title', name: 'title', blankError: 'You must provide a title.' },
-    { label: 'Subject Line', name: 'subject', blankError: 'You must provide a subject line.' },
-    { label: 'Email Body', name: 'body', blankError: 'You must provide a body for the email.' },
-    { label: 'Recipient List', name: 'emails', blankError: 'You must provide email recipients separated by a comma.' }
-];
+import formFields from './formFields';
 
 class SurveyForm extends Component {
 
     renderFields() {
-        return _.map(FIELDS, ({ label, name }) => {
+        return _.map(formFields, ({ label, name }) => {
             return (
                 <Field 
                     key={name}
@@ -31,7 +25,8 @@ class SurveyForm extends Component {
     render() {
         return (
             <div>
-                <form onSubmit={this.props.handleSubmit(values => console.log(values))}>
+                {/* <form onSubmit={this.props.handleSubmit(values => console.log(values))}> */}
+                <form onSubmit={this.props.handleSubmit(this.props.onSurveySubmit)}>
                     {this.renderFields()}
                     <Link to="/surveys" className="btn btn-primary" href="#" role="button">Cancel</Link>
                     <button type="submit" className="btn btn-primary">Next</button>
@@ -55,10 +50,10 @@ function validate(values) {
     // when validateEmails run, if anything returns, that string of invalid emails will be returned 
     // if no emails have been entered, it will provide an empty string
     // otherwise it will return as undefined, which errors doesn't care about -- it only cares about values
-    errors.emails = validateEmails(values.emails || '');
+    errors.recipients = validateEmails(values.recipients || '');
 
     // validate emails must be first, or else it will overwrite any error message from this
-    _.each(FIELDS, ({ name, blankError }) => {
+    _.each(formFields, ({ name, blankError }) => {
         if (!values[name]) {
             errors[name] = blankError;
         }
@@ -69,7 +64,10 @@ function validate(values) {
     return errors;
 }
 
+// reduxForm helper
+// if surveyForm or surveyNew are unmounted, the values will persist based on the destroyOnMount being false for this component
 export default reduxForm({
     validate,
-    form: 'surveyForm'
+    form: 'surveyForm',
+    destroyOnUnmount: false
 })(SurveyForm);
