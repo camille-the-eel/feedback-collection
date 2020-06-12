@@ -2,9 +2,11 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import formFields from './formFields';
+import { withRouter } from 'react-router-dom';
 import * as actions from '../../actions/index';
 
-const SurveyReview = ({ onCancel, formValues, submitSurvey }) => {
+//history comes from withRouter
+const SurveyReview = ({ onCancel, formValues, submitSurvey, history }) => {
 
     // you could use es6 destructuing on fields, so that we don't repeat fields. so many times
     // I will leave it as is, since the key name was tricky to get my head wrapped around
@@ -29,7 +31,7 @@ const SurveyReview = ({ onCancel, formValues, submitSurvey }) => {
                 Back
             </button>
             {/* when you don't want your function to run on page load, either wrap it in an arrow function or omit the call () */}
-            <button className="btn btn-primary" onClick={() => submitSurvey(formValues)} > 
+            <button className="btn btn-primary" onClick={() => submitSurvey(formValues, history)} > 
                 Send Survey
             </button>
         </div>
@@ -41,4 +43,4 @@ function mapStateToProps(state) {
     return { formValues: state.form.surveyForm.values };
 }
 
-export default connect(mapStateToProps, actions)(SurveyReview);
+export default connect(mapStateToProps, actions)(withRouter(SurveyReview));
