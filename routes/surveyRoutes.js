@@ -1,3 +1,7 @@
+const _ = require('lodash');
+const { Path } = require('path-parser');
+// URL comes with node.js
+const { URL } = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
@@ -7,7 +11,7 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 const Survey = mongoose.model('surveys');
 
 module.exports = (app) => {
-  app.get('/api/surveys/thanks', (req, res) => {
+  app.get('/api/surveys/:surveyId/:choice', (req, res) => {
     res.send('Thanks for taking the time to give us your feedback!');
   });
 
@@ -38,5 +42,66 @@ module.exports = (app) => {
     } catch (err) {
       res.status(422).send(err);
     }
+  });
+
+  //webhooks
+  // app.post('/api/surveys/webhooks', (req, res) => {
+  //   // TESTING ...
+  //   // console.log(req.body);
+  //   // res.send({});
+
+  //   const events = _.map(req.body, (event) => {
+  //     // extracting path from the full URL
+  //     const pathname = new URL(event.url).pathname;
+  //     const p = new Path('/api/surveys/:surveyId/:choice');
+  //     // console.log(p.test(pathname));
+  //     // matching path to include surveyId and choice -- will return undefined otherwise
+  //     const match = p.test(pathname);
+  //     // creating object of valuable info
+  //     if (match) {
+  //       return { email: event.email, surveyId: match.surveyId, choice: match.choice };
+  //     }
+  //   });
+  //   // console.log(events);
+
+  //   // only returns event objects, strips away any events that returned as undefined
+  //   const compactEvents = _.compact(events);
+  //   // removes duplicate objects
+  //   const uniqueEvents = _.uniqBy(compactEvents, 'email', 'surveyId');
+
+  //   // let SendGrid know we got the event ping
+  //   res.send({});
+  //   console.log(uniqueEvents);
+  // });
+
+  // webhook refactor with clean up and utilizing lodash chain
+  app.post('/api/surveys/webhooks', (req, res) => {
+
+    const p = new Path('/api/surveys/:surveyId/:choice');
+
+    _.chain(req.body)
+      .map(({ email, url }) => {      
+        const match = p.test(new URL(url).pathname);
+        if (match) {
+          return { email, surveyId: match.surveyId, choice: match.choice };
+        }
+      })
+      .compact()
+      .uniqBy('email', 'surveyId')
+      .each(({ surveyId, email, choice }) => {
+        Survey.updateOne({
+          _id: surveyId,
+          recipients: {
+            $elemMatch: { email: email, responded: false }
+          }
+        }, {
+          $inc: { [choice]: 1 },
+          $set: { 'recipients.$.responded': true},
+          lastResponded: new Date()
+        }).exec(); //must call so this query is actually executed
+      })
+      .value();
+
+    res.send({});
   });
 };
