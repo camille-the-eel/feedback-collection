@@ -1,7 +1,8 @@
 // before refactor
 // ACTION CREATORS
 import axios from 'axios';
-import { FETCH_USER } from './types';
+import { FETCH_USER, FETCH_SURVEYS } from './types';
+// import { redirectDomain } from '../../../config/prod';
 
 // version 1 -- tutorial draft, if you will
 // the purpose of redux-thunk as middleware is to inspect whatever value we return from action creator
@@ -42,3 +43,10 @@ export const submitSurvey = (values, history) => async (dispatch) => {
   history.push('/surveys');
   dispatch({ type: FETCH_USER, payload: res.data });
 };
+
+export const fetchSurveys = () => async dispatch => {
+  const res = await axios.get('/api/surveys');
+
+  // payload will be array of surveys our user has created
+  dispatch({ type: FETCH_SURVEYS, payload: res.data });
+}
