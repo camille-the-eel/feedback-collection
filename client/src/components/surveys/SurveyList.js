@@ -7,8 +7,6 @@ class SurveyList extends Component {
     componentDidMount() {
         this.props.fetchSurveys();
     }
-                                // {/* Last Response: {new Date(survey.lastResponded).toLocaleDateString() || 'This survey has not received any responses yet.'}  */}
-
 
     renderSurveys() {
         return this.props.surveys.reverse().map(survey => {
@@ -24,12 +22,11 @@ class SurveyList extends Component {
                         <div class="card-body">
                             <p className="card-text">{survey.subject}</p>
                             <p className="card-text">{survey.body}</p>
-                            {/* takes dateSent in mongo, which is saved as a string, and reformats in to nice lookin date */}
-                            {/* <p className="card-text">Sent On: {new Date(survey.dateSent).toLocaleDateString()}</p> */}
                             <p className="card-text">Yes: {survey.yes}</p>
                             <p className="card-text">No: {survey.no}</p>
                         </div>
                         <div className="card-footer text-muted">
+                            {/* takes dateSent in mongo, which is saved as a string, and reformats in to nice lookin date */}
                             Sent On: {new Date(survey.dateSent).toLocaleDateString()}
                         </div>
                     </div>
