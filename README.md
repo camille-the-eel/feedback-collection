@@ -14,3 +14,4 @@ It will provide you with a web address that will persist for 8 hours, while the 
 
 Sendgrid integration: you will need to add the address to Event Notification's HTTP POST URL field. Anytime you start a new ngrok session you will need to update this field.
 
+Icons made by <a href="https://www.flaticon.com/authors/freepik">Freepik</a> from <a href="https://www.flaticon.com/"> www.flaticon.com</a>
